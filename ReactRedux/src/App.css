@@ -1,0 +1,15 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+}
+button {
+  outline: none;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
