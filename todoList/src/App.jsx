@@ -1,9 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setTodos } from "./redux/todoSlicer";
 
 export default function App() {
   const [todoValue, setTodoValue] = useState("");
+  const todos = useSelector((state) => state.todos.todos);
+  const dispatch = useDispatch();
+  console.log(todos);
 
   // hit please localStorage Api
   // {
@@ -12,33 +17,42 @@ export default function App() {
   //   isPending: "",
   // },
 
-  const [todos, setTodos] = useState([]);
+  // const [todos, setTodos] = useState([]);
 
   const handleAddToDo = () => {
-    setTodos((prev) => [
-      ...prev,
-      { id: Date.now(), value: todoValue, isPending: false },
-    ]);
+    // setTodos((prev) => [
+    //   ...prev,
+    //   { id: Date.now(), value: todoValue, isPending: false },
+    // ]);
+
+    //using redux
+
+    dispatch(
+      setTodos([
+        ...todos,
+        { id: Date.now(), value: todoValue, isCompleted: false },
+      ])
+    );
+
     setTodoValue("");
   };
 
   const pendingTasks = todos?.filter(
-    (item) => item?.isPending === false && item?.value
+    (item) => item?.isCompleted === false && item?.value
   );
 
-  const completedTasks = todos?.filter((item) => item?.isPending === true);
-
-  console.log(completedTasks);
+  const completedTasks = todos?.filter((item) => item?.isCompleted === true);
 
   const handleDelete = (id) => {
     const updatedTods = todos?.filter((item) => item?.id !== id);
-    setTodos(updatedTods);
+    dispatch(setTodos(updatedTods));
   };
 
   const handleUpdate = (index) => {
-    const updatingTodos = [...todos];
-    updatingTodos[index].isPending = true;
-    setTodos(updatingTodos);
+    const updatingTodos = JSON.parse(JSON.stringify([...todos]));
+    updatingTodos[index].isCompleted = true;
+    // setTodos(updatingTodos); //using redux
+    dispatch(setTodos(updatingTodos));
   };
 
   return (
